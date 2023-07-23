@@ -1,29 +1,34 @@
 #!/usr/bin/python3
 
 import time
-
 import rospy
+import numpy as np
 
+from nav_msgs.msg import OccupancyGrid
 from dqn_controller.msg import ReplayRecord
 
 class Learner:
     def __init__(self) -> None:
         rospy.init_node("learner", anonymous=True)
 
-        self.time = 0
-
-        self.my_subscriber = rospy.Subscriber("/myTopic", ReplayRecord, callback=self.myTopic_callback)
+        self.my_subscriber = rospy.Subscriber("/data_buffer", ReplayRecord, callback=self.myTopic_callback)
 
 
-    def myTopic_callback(self, num: ReplayRecord):
-        print(num)
+    def myTopic_callback(self, data: ReplayRecord):
+        maps = np.array([m.data for m in data.maps]).reshape(-1, 384, 384)
+        scans = np.array([s.ranges for s in data.scans]).reshape(maps.shape[0], 5, 360)
+        velocitys = np.array([b.linear.x for b in data.cmds]).reshape(maps.shape[0], 1)
+        rotations = np.array([b.angular.z for b in data.cmds]).reshape(maps.shape[0], 1)
+
+        print(maps.shape)
+        print(scans.shape)
+        print(velocitys.shape)
+        print(rotations.shape)
         print()
 
 
     def run(self):
         while not rospy.is_shutdown():
-            # print(time.time() - self.time)
-            self.time = time.time()
             rospy.sleep(1)
 
 

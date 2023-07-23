@@ -31,7 +31,7 @@ class Controller:
         self.laser_subscriber = rospy.Subscriber("/scan" , LaserScan , callback=self.laser_callback)
         # publisher
         self.cmd_publisher = rospy.Publisher('/cmd_vel' , Twist , queue_size=10)
-        self.my_publisher = rospy.Publisher("/myTopic", ReplayRecord, queue_size=10)
+        self.my_publisher = rospy.Publisher("/data_buffer", ReplayRecord, queue_size=10)
 
 
         self.get_map()
@@ -99,14 +99,15 @@ class Controller:
         remain_episode = NUMBER_OF_EPISODE
 
 
-        buffer = []
 
         while remain_episode > 0 and not rospy.is_shutdown():
             remain_episode -= 1
 
             self.reset_env()
             self.action_twist = Twist()
+            self.cmd_publisher.publish(self.action_twist)
             self.laser_list.clear()
+            buffer = []
 
             for i in range(NUMBER_OF_STEP + 1):
                 s_map = self.get_map()
@@ -123,10 +124,11 @@ class Controller:
 
 
             # publish data for learner
-            # record = ReplayRecord()
-            # record.data = len(self.laser_list), 10
-            # self.my_publisher.publish(record)
-            #####
+            record = ReplayRecord()
+            record.maps = [b[0].map for b in buffer]
+            record.scans = sum([b[1] for b in buffer], [])
+            record.cmds = [b[2] for b in buffer]
+            self.my_publisher.publish(record)
 
 
 

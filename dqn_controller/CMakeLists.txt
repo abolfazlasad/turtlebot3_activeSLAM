@@ -11,6 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   roscpp
   std_msgs
+  nav_msgs
+  sensor_msgs
+  geometry_msgs
   message_generation
 )
 
@@ -71,6 +74,9 @@ add_message_files(
 generate_messages(
   DEPENDENCIES
   std_msgs
+  nav_msgs
+  sensor_msgs
+  geometry_msgs
 )
 
 ################################################
@@ -103,7 +109,7 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS message_runtime std_msgs nav_msgs sensor_msgs geometry_msgs
 #  INCLUDE_DIRS include
 #  LIBRARIES dqn_controller
 #  CATKIN_DEPENDS rospy std_msgs
