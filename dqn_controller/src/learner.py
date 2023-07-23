@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import time
 import rospy
 import numpy as np
 
@@ -15,14 +14,14 @@ class Learner:
 
 
     def myTopic_callback(self, data: ReplayRecord):
-        maps = np.array([m.data for m in data.maps]).reshape(-1, 384, 384)
+        maps = np.array([m.data for m in data.maps], dtype=np.int8).reshape(-1, 384, 384)
         scans = np.array([s.ranges for s in data.scans]).reshape(maps.shape[0], 5, 360)
-        velocitys = np.array([b.linear.x for b in data.cmds]).reshape(maps.shape[0], 1)
+        velocities = np.array([b.linear.x for b in data.cmds]).reshape(maps.shape[0], 1)
         rotations = np.array([b.angular.z for b in data.cmds]).reshape(maps.shape[0], 1)
 
         print(maps.shape)
         print(scans.shape)
-        print(velocitys.shape)
+        print(velocities.shape)
         print(rotations.shape)
         print()
 
