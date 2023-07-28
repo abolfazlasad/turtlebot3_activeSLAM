@@ -19,9 +19,9 @@ class Logger:
         rotations = np.array([b.angular.z for b in data.cmds]).reshape(maps.shape[0], 1)
 
         # TODO use const variable
-        s = "/home/asad/catkin_ws2/src/turtlebot3_activeSLAM/dqn_controller/log/"
+        s = "/home/asad/catkin_ws2/src/turtlebot3_activeSLAM/dqn_controller/log/turtlebot3"
+        s += "(" + str(maps.shape[0]) + ") "
         s += str(datetime.datetime.now())[:19]
-        s += " (" + str(maps.shape[0]) + ")"
         s += "/"
         Path(s).mkdir(parents=True, exist_ok=True)
 
