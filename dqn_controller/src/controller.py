@@ -124,7 +124,7 @@ class Controller:
         rand = random.random()
 
         # for validation phase
-        rand = 1
+        # rand = 1
 
         if rand > EPS_THRESHOLD:
             with torch.no_grad():
